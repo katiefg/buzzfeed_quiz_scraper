@@ -46,6 +46,18 @@ def write_results_to_file(results, basename):
             outfile.write('\n')
             outfile.close()
 
+def write_results_to_masterfile(results, basename):
+    outfilename = "Results/%s_Master.txt" % basename
+    if len(results) >= 1:
+        for item in range(0, len(results)):
+            if results[item] not in open(outfilename).read(): 
+                # Find out what our file number should be
+                file_num = item            
+                outfile = open(outfilename, 'a', encoding='utf-8')
+                outfile.write(results[item])
+                outfile.write('\n')
+                outfile.close()
+
 def quizScraper():
     from bs4 import BeautifulSoup
     import requests
@@ -61,7 +73,9 @@ def quizScraper():
     ### Get Subgroup from the user ###
     subgroup_tup = get_subgroup_from_user()
     subgroup = subgroup_tup[1]
-    subgroup_string = subgroup_tup[0].strip()
+    subgroup_string = ''.join(subgroup_tup[0].split())
+
+    print(subgroup_string)
 
     ### Get number of pages from user ###
     pagenum = int(get_pagenum_from_user())
@@ -93,12 +107,13 @@ def quizScraper():
         subheads = [x.get_text() for x in subheads_found]
         
 
-        write_results_to_file(titles, (subgroup_string + '_' + datetime.now().strftime("%Y%m%d")))
 
+
+        #write_results_to_file(titles, (subgroup_string + '_' + datetime.now().strftime("%Y%m%d_%H%M")))
+        write_results_to_masterfile(titles, subgroup_string)
         
   
 
-#get_subgroup_from_user()
 quizScraper()
 
 
